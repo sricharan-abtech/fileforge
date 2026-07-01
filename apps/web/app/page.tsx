@@ -1,9 +1,11 @@
+import Navbar from "./components/layout/Navbar";
+import Hero from "./components/home/Hero";
+
 export default function HomePage() {
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <h1 className="text-5xl font-bold">
-        Welcome to FileForge 🚀
-      </h1>
+    <main className="min-h-screen bg-slate-950 text-white">
+      <Navbar />
+      <Hero />
     </main>
   );
-}
+}   
