@@ -1,34 +1,31 @@
+"use client";
+
+import FileCard from "./FileCard";
+
 type FileListProps = {
   files: File[];
+  onRemove: (fileName: string) => void;
 };
 
 export default function FileList({
   files,
+  onRemove,
 }: FileListProps) {
   if (files.length === 0) return null;
 
   return (
-    <div className="mt-8 max-w-2xl mx-auto">
-      <h2 className="mb-4 text-xl font-semibold text-white">
+    <div className="mx-auto mt-10 max-w-4xl">
+      <h2 className="mb-4 text-2xl font-bold text-white">
         Selected Files
       </h2>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {files.map((file) => (
-          <div
+          <FileCard
             key={file.name}
-            className="rounded-xl border border-slate-700 bg-slate-900 p-4 flex items-center justify-between"
-          >
-            <div>
-              <p className="font-medium text-white">
-                {file.name}
-              </p>
-
-              <p className="text-sm text-slate-400">
-                {(file.size / 1024 / 1024).toFixed(2)} MB
-              </p>
-            </div>
-          </div>
+            file={file}
+            onRemove={onRemove}
+          />
         ))}
       </div>
     </div>

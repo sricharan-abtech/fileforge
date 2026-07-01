@@ -1,3 +1,4 @@
+"use client";
 import Button from "../ui/Button";
 import Container from "../ui/Container";
 
@@ -15,9 +16,17 @@ export default function Hero() {
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
-          <Button>
-            Upload File
-          </Button>
+          <Button
+  onClick={() => {
+    document
+      .getElementById("upload")
+      ?.scrollIntoView({
+        behavior: "smooth",
+      });
+  }}
+>
+  Upload File
+</Button>
 
           <Button variant="secondary">
             Explore Tools
