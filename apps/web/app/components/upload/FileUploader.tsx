@@ -5,56 +5,41 @@ import { useState } from "react";
 import DropZone from "./DropZone";
 import FileList from "./FileList";
 
-import { validateFiles } from "../../lib/fileValidation";
+import { generateJobId } from "../../lib/id";
+import { queue } from "../../services/queue";
+import {
+  ConversionJob,
+  ConversionType,
+} from "../../services/converter";
 
 export default function FileUploader() {
   const [files, setFiles] = useState<File[]>([]);
-  const [errors, setErrors] = useState<string[]>([]);
 
   function handleFiles(selectedFiles: File[]) {
-  const result = validateFiles(
-    selectedFiles,
-    files
-  );
+    // Display files in UI
+    setFiles(selectedFiles);
 
-  setFiles((previous) => [
-    ...previous,
-    ...result.validFiles,
-  ]);
+    // Create a conversion job for each file
+    selectedFiles.forEach((file) => {
+      const job: ConversionJob = {
+        id: generateJobId(),
+        file,
+        type: "pdf-to-word" as ConversionType,
+      };
 
-  setErrors(result.errors);
-}
+      queue.add(job);
 
-  function removeFile(fileName: string) {
-  setFiles((previousFiles) =>
-    previousFiles.filter(
-      (file) => file.name !== fileName
-    )
-  );
-}
+      console.log("Job Added:", job);
+    });
+
+    console.log("Current Queue:", queue.getJobs());
+  }
 
   return (
-    <section id="upload" className="py-20">
+    <section className="py-20">
       <DropZone onFilesSelected={handleFiles} />
 
-      {errors.length > 0 && (
-        <div className="mx-auto mt-6 max-w-4xl rounded-xl border border-red-500 bg-red-500/10 p-4">
-          <h3 className="font-semibold text-red-400">
-            Upload Errors
-          </h3>
-
-          <ul className="mt-2 list-disc pl-5 text-sm text-red-300">
-            {errors.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <FileList
-  files={files}
-  onRemove={removeFile}
-/>
+      <FileList files={files} />
     </section>
   );
 }
